@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "241889247327",
+    "project_id": "akmalamirul-2bb57",
+    "storage_bucket": "akmalamirul-2bb57.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:241889247327:android:b91fd7ad17d2a875085bea",
+        "android_client_info": {
+          "package_name": "com.example.aplikasipenting"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnIhB1BT_nDMjcWVg1HtcnLZN02P2rREE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:241889247327:android:7205a2a91dc6703d085bea",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnIhB1BT_nDMjcWVg1HtcnLZN02P2rREE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
