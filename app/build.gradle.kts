@@ -56,10 +56,10 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
-    dependencies {
-        implementation("androidx.credentials:credentials:1.3.0")
-        implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
-        implementation("com.google.android.libraries.identity.googleid:googleid:1.1.0")
-        implementation("com.google.firebase:firebase-auth:23.0.0")
-    }
+
+    implementation("androidx.credentials:credentials:1.3.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
+
 }

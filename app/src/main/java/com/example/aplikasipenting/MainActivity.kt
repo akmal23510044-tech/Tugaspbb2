@@ -50,17 +50,9 @@ class MainActivity : AppCompatActivity() {
     private fun registerEvent() {
         binding.btnLogin.setOnClickListener {
             lifecycleScope.launch {
-                try {
                     val request = prepareRequest()
                     loginByGoogle(request)
-                } catch (e: Exception) {
-                    Log.e("MainActivity", "registerEvent error", e)
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Terjadi kesalahan: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+
             }
         }
     }
@@ -75,36 +67,30 @@ class MainActivity : AppCompatActivity() {
             .setServerClientId(serverClientId)
             .build()
 
-        return GetCredentialRequest.Builder()
+        val request = GetCredentialRequest
+            .Builder()
             .addCredentialOption(googleIdOption)
             .build()
+
+        return request
     }
 
-    private suspend fun loginByGoogle(request: GetCredentialRequest) {
+    suspend fun loginByGoogle(request: GetCredentialRequest) {
         try {
             // Gunakan context yang eksplisit
-            val result = credentialManager.getCredential(this@MainActivity, request)
+            val result = credentialManager.getCredential(
+                context = this ,
+                request = request
+            )
             val credential = result.credential
+            val idToken = GoogleIdTokenCredential.createFrom(credential.data)
 
-            val googleIdTokenCredential =
-                GoogleIdTokenCredential.createFrom(credential.data)
+            firebaseLoginCallback(idToken.idToken)
 
-            val idToken = googleIdTokenCredential.idToken
-
-            if (idToken.isNullOrEmpty()) {
-                Toast.makeText(this, "Gagal mendapatkan ID token", Toast.LENGTH_SHORT).show()
-                return
-            }
-
-            firebaseLoginCallback(idToken)
-        } catch (e: NoCredentialException) {
-            Toast.makeText(this, "Tidak ada kredensial ditemukan", Toast.LENGTH_SHORT).show()
-        } catch (e: GetCredentialException) {
-            Toast.makeText(this, "Gagal mengambil kredensial: ${e.message}", Toast.LENGTH_SHORT).show()
-            Log.e("MainActivity", "GetCredentialException", e)
-        } catch (e: Exception) {
-            Log.e("MainActivity", "loginByGoogle error", e)
-            Toast.makeText(this, "Login gagal: ${e.message}", Toast.LENGTH_SHORT).show()
+        } catch (exc: NoCredentialException) {
+            Toast.makeText(this, "login gagal" + exc.message, Toast.LENGTH_SHORT).show()
+        } catch (exc: Exception) {
+            Toast.makeText(this, "Login gagal"+ exc.message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -117,16 +103,14 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Login Berhasil", Toast.LENGTH_LONG).show()
                     toMyPage()
                 } else {
-                    val msg = task.exception?.message ?: "Unknown error"
-                    Toast.makeText(this, "Login Gagal: $msg", Toast.LENGTH_SHORT).show()
-                    Log.w("MainActivity", "signInWithCredential failed: $msg", task.exception)
+                    Toast.makeText(this, "Login Gagal", Toast.LENGTH_SHORT).show()
                 }
             }
     }
 
-    private fun isAuthenticated(): Boolean =
-        auth.currentUser != null
-
+    fun isAuthenticated(): Boolean {
+        return auth.currentUser != null
+    }
     override fun onStart() {
         super.onStart()
         if (isAuthenticated()) {
