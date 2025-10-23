@@ -9,8 +9,37 @@ import com.example.aplikasipenting.databinding.ItemTodoBinding
 import com.example.aplikasipenting.entitiy.Todo
 
 class TodoAdapter(
-    private val dataset: MutableList<Todo>
+    private val dataset: MutableList<Todo>,
+    private val events: TodoItemEvents
 ) : RecyclerView.Adapter<TodoAdapter.CustomViewHolder>() {
+
+
+    interface TodoItemEvents {
+        fun onDelete(todo: Todo)
+        fun onEdit(todo: Todo)
+    }
+
+
+    inner class CustomViewHolder(val view: ItemTodoBinding)
+        : RecyclerView.ViewHolder(view.root) {
+
+        fun bindData(data: Todo) {
+            view.title.text = data.title
+            view.description.text = data.description
+
+            //eh ketika misal ada user yang click item todo tolong kasih tau aku
+            view.root.setOnLongClickListener {
+                events.onDelete(data)
+                true
+            }
+
+            view.root.setOnClickListener{
+                events.onEdit(data)
+            }
+
+        }
+    }
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -27,9 +56,9 @@ class TodoAdapter(
 
     override fun onBindViewHolder(
         holder: CustomViewHolder,
-        position: Int
+        index: Int
     ) {
-        val data = dataset[position]
+        val data = dataset[index]
         holder.bindData(data)
     }
 
@@ -38,14 +67,7 @@ class TodoAdapter(
     /**
      * class custom view
      */
-    inner class CustomViewHolder(val view: ItemTodoBinding)
-        : RecyclerView.ViewHolder(view.root) {
 
-        fun bindData(item: Todo) {
-            view.title.text = item.title
-            view.description.text = item.description
-        }
-    }
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateData(newData: List<Todo>) {

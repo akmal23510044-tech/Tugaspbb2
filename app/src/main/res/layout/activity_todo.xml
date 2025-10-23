@@ -4,17 +4,17 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="TodoActivity">
+    tools:context=".TodoActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp"
+        tools:listitem="@layout/item_todo"
+        tools:itemCount=""
         />
 
     <ProgressBar
@@ -28,10 +28,11 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:contentDescription="Navigate to create Mymy"
+        android:contentDescription="Navigate to create Todo"
         android:padding="20dp"
         android:layout_margin="20dp"
         android:src="@android:color/background_dark"
+        android:id="@+id/TombolCreateTodo"
 
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"

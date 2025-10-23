@@ -1,72 +1,118 @@
 package com.example.aplikasipenting
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
+
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aplikasipenting.adapter.TodoAdapter
 import com.example.aplikasipenting.databinding.ActivityTodoBinding
+import com.example.aplikasipenting.entitiy.Todo
 import com.example.aplikasipenting.usecases.TodoUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TodoActivity : AppCompatActivity() {
+
+    private lateinit var adapter: TodoAdapter
     private lateinit var binding: ActivityTodoBinding
-    private lateinit var todoUseCase: TodoUseCase
-    private lateinit var todoAdapter: TodoAdapter
+    private val todoUseCase = TodoUseCase()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding = ActivityTodoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
-        todoUseCase = TodoUseCase()
-//        siapkan kebutuhan recyclerciew terlebih dahulu
+        registerEvents()
         setupRecyclerView()
 
-//        inisiasi mengambil data dari firestore
-        initializeData()
-
-    }
-
-    private fun setupRecyclerView() {
-        todoAdapter = TodoAdapter(mutableListOf())
+        // BARU PASANG KE RECYCLER VIEW
         binding.container.apply {
-            adapter = todoAdapter
             layoutManager = LinearLayoutManager(this@TodoActivity)
+            adapter = this@TodoActivity.adapter
         }
     }
 
-    private fun initializeData() {
-        lifecycleScope.launch {
-            // sembunyikan tambilan recyclerview terlebih dahulu dan tampilkan ui loading
-            binding.container.visibility = View.GONE
-            binding.uiLoading.visibility = View.VISIBLE
+    private fun registerEvents() {
+        binding.TombolCreateTodo.setOnClickListener{
+            val intent = Intent(this, CreateTodoActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
 
+    private fun loadTodos() {
+        binding.uiLoading.visibility = View.VISIBLE
+
+        CoroutineScope(Dispatchers.IO).launch {
             try {
-                //  ambil data dariu firebase
-                var todoList = todoUseCase.getTodo()
-
-                // jika sudah mendapatkan data dan tidak ada error tampilkan kembali recyclerview dan sembunyikan ui loading
-                binding.uiLoading.visibility = View.GONE
-                binding.container.visibility = View.VISIBLE
-
-                // update data yang ada di adapter
-                todoAdapter.updateData(todoList)
-
+                val todos = todoUseCase.getTodo()
+                withContext(Dispatchers.Main) {
+                    adapter.updateData(todos)
+                    binding.uiLoading.visibility = View.GONE
+                }
             } catch (e: Exception) {
-                Toast.makeText(this@TodoActivity, e.message, Toast.LENGTH_SHORT).show()
+                withContext(Dispatchers.Main) {
+                    binding.uiLoading.visibility = View.GONE
+                }
             }
         }
     }
+
+    private fun setupRecyclerView() {
+        adapter = TodoAdapter(mutableListOf(), object : TodoAdapter.TodoItemEvents {
+
+            override fun onDelete(todo: Todo) {
+                val builder = AlertDialog.Builder(this@TodoActivity)
+                builder.setTitle("Konfirmasi Hapus Data")
+                builder.setMessage("Apakah kamu yakin ingin menghapus todo ini?")
+
+                builder.setPositiveButton("Ya") { dialog, _ ->
+                    lifecycleScope.launch {
+                        try {
+                            todoUseCase.deleteTodo(todo.id)
+                            displayMessage("Data berhasil dihapus")
+                            loadTodos() // refresh data
+                        } catch (exc: Exception) {
+                            displayMessage("Gagal menghapus data: ${exc.message}")
+                        }
+                    }
+                    dialog.dismiss()
+                }
+
+                builder.setNegativeButton("Tidak") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                val  dialog = builder.create()
+                dialog.show()
+            }
+
+            override fun onEdit(todo: Todo) {
+                val intent = Intent( this@TodoActivity, EditTodoActivity::class.java)
+                intent.putExtra("todo.item.id",todo.id)
+                startActivity(intent)
+            }
+        })
+
+    }
+
+
+    private fun displayMessage(message: String) {
+        Toast.makeText(this@TodoActivity, message, Toast.LENGTH_SHORT).show()
+    }
+
+
+
+    override fun onResume() {
+        super.onResume()
+        loadTodos()
+    }
+
 }

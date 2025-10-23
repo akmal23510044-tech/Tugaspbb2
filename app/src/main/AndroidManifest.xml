@@ -12,10 +12,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Aplikasipenting"
         tools:targetApi="31">
+
+
+        <activity
+            android:name=".EditTodoActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".CreateTodoActivity"
+            android:exported="false"/>
         <activity
             android:name=".TodoActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">

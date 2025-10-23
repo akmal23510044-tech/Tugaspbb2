@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F6FA"
+    android:padding="24dp"
+    tools:context=".EditTodoActivity">
+
+    <!-- Judul Halaman -->
+    <TextView
+        android:id="@+id/header_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Catatan"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#1E3A8A"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Input Judul -->
+    <EditText
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_title"
+        android:hint="Judul Catatan"
+        android:padding="14dp"
+        android:textColor="#1F2937"
+        android:textColorHint="#9CA3AF"
+        android:inputType="textCapSentences" />
+
+    <!-- Input Deskripsi -->
+    <EditText
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_below="@id/title"
+        android:layout_marginTop="12dp"
+        android:hint="Deskripsi catatan"
+        android:gravity="top|start"
+        android:padding="14dp"
+        android:textColor="#1F2937"
+        android:textColorHint="#9CA3AF"
+        android:inputType="textMultiLine" />
+
+    <!-- Tombol Simpan -->
+    <Button
+        android:id="@+id/tombolUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/description"
+        android:layout_marginTop="20dp"
+        android:text="Simpan Perubahan"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#2563EB"
+        android:elevation="4dp"
+        android:paddingVertical="10dp" />
+
+</RelativeLayout>

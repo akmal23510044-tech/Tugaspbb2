@@ -5,18 +5,58 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F5F9FF"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btn_login"
+    <!-- Container tengah -->
+    <LinearLayout
+        android:id="@+id/centerContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Jin Jin Jin Lojin"
-
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Judul aplikasi -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aplikasi Penting"
+            android:textColor="#1E3A8A"
+            android:textStyle="bold"
+            android:textSize="26sp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Deskripsi -->
+        <TextView
+            android:id="@+id/tvSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Selamat datang! Silakan login untuk melanjutkan."
+            android:textColor="#6B7280"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Tombol Login -->
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="Login Sekarang"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#2563EB"
+            android:paddingVertical="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
+            app:cornerRadius="12dp" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
